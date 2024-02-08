@@ -33,7 +33,8 @@ const ClipIcon = styled(AttachFile)`
     transform: rotate(30deg);
 `;
 
-const Footer = () => {
+const Footer = ({ sendText, setValue, value }) => {
+
   return (
     <Container>
         <EmojiEmotionsOutlined />
@@ -41,6 +42,9 @@ const Footer = () => {
         <Search>
             <InputField
                 placeholder='Type a message'
+                onChange = {(e) => setValue(e.target.value)}
+                onKeyPress={(e) => sendText(e)}
+                value={value}
             />
         </Search>
         <Mic />
