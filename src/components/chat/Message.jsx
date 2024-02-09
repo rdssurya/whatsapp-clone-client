@@ -36,6 +36,33 @@ const Time = styled(Typography)`
   word-break: keep-all;
 `;
 
+const TextMessage = (message) => {
+  return (
+    <>
+      <Text>{message.text}</Text>
+      <Time>{formatDate(message.createdAt)}</Time>
+    </>
+  );
+};
+
+const ImageMessage = (message) =>{
+  return (
+    <Box>
+      {
+        message?.text?.includes(".pdf") ? 
+        <Box>
+
+        </Box>
+        :
+        <>
+        <img style={{width: 300, height: "100%", objectFit:"cover"}} src={message.text} alt={message.text}/>
+        </>
+      }
+      <Time>{formatDate(message.createdAt)}</Time>
+    </Box>
+  );
+};
+
 const Message = ({ message }) => {
 
   const { account } = useContext(AccountContext);
@@ -46,8 +73,9 @@ const Message = ({ message }) => {
       {
         account.sub === message.senderId ?
         <Own>
-          <Text>{message.text}</Text>
-          <Time>{formatDate(message.createdAt)}</Time>
+          {
+            message.type === "file" ? <ImageMessage message={message}/> : <TextMessage message={message}/>
+          }
         </Own> : 
         <Wrapper>
           <Text>{message.text}</Text>
