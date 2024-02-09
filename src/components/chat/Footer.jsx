@@ -67,7 +67,7 @@ const Footer = ({ sendText, setValue, value, file, setFile, setImage }) => {
             type="file"
             id="fileInput"
             style={{display:"none"}}
-            onFileChange = {(e)=>onFileChange(e)}
+            onChange={(e)=>onFileChange(e)}
         />
         <Search>
             <InputField

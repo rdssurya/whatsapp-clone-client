@@ -1,7 +1,10 @@
 import { Box, Typography, styled } from '@mui/material';
 import React, { useContext } from 'react';
-import formatDate from '../../utils/CommonUtils';
+import {formatDate, downloadMedia} from '../../utils/CommonUtils';
+import {iconPDF} from "../../assets/data";
 import { AccountContext } from '../context/AccountProvider';
+import GetAppIcon from '@mui/icons-material/GetApp';
+
 
 const Own = styled(Box)`
   background: #dcf8c6;
@@ -36,7 +39,7 @@ const Time = styled(Typography)`
   word-break: keep-all;
 `;
 
-const TextMessage = (message) => {
+const TextMessage = ({message}) => {
   return (
     <>
       <Text>{message.text}</Text>
@@ -45,20 +48,28 @@ const TextMessage = (message) => {
   );
 };
 
-const ImageMessage = (message) =>{
+const ImageMessage = ({message}) =>{
   return (
     <Box>
       {
         message?.text?.includes(".pdf") ? 
-        <Box>
-
+        <Box style={{display: "flex"}}>
+          <img src={iconPDF} alt="pdf" style={{width: 80}}/>
+          <Typography style={{fontSize: 14}}>{message.text.split("/").pop()}</Typography>
         </Box>
         :
         <>
         <img style={{width: 300, height: "100%", objectFit:"cover"}} src={message.text} alt={message.text}/>
         </>
       }
-      <Time>{formatDate(message.createdAt)}</Time>
+      <Time style={{position: 'absolute', bottom: 0, right: 0}}>
+        <GetAppIcon 
+          onClick = {(e)=> downloadMedia(e, message.text)}
+          style={{marginRight:10,border: '10px solid grey', borderRadius:'50%'}}
+          fontSize='small'
+        />
+        {formatDate(message.createdAt)}
+      </Time>
     </Box>
   );
 };
@@ -78,8 +89,9 @@ const Message = ({ message }) => {
           }
         </Own> : 
         <Wrapper>
-          <Text>{message.text}</Text>
-          <Time>{formatDate(message.createdAt)}</Time>
+          {
+            message.type === "file" ? <ImageMessage message={message}/> : <TextMessage message={message}/>
+          }
         </Wrapper>
       }
     </>
